@@ -1,0 +1,38 @@
+name: "Feature request"
+description: Sugestao de nova funcionalidade ou melhoria
+labels: ["type: feature", "status: triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema/oportunidade
+      description: Qual problema essa melhoria resolve?
+      placeholder: Como usuario, hoje eu...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+      description: Descreva a solucao desejada
+      placeholder: A funcionalidade deveria...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceite
+      description: Como saberemos que esta pronto?
+      placeholder: |
+        - [ ] Criterio 1
+        - [ ] Criterio 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Referencias
+      description: Links, mockups, docs ou exemplos

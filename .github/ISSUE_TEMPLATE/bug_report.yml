@@ -1,0 +1,49 @@
+name: "Bug report"
+description: Reporte um problema encontrado no sistema
+labels: ["type: bug", "status: triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descricao
+      description: O que aconteceu?
+      placeholder: Descreva o erro com contexto
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Liste os passos para reproduzir o problema
+      placeholder: |
+        1. Ir para ...
+        2. Clicar em ...
+        3. Ver erro ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+      description: O que deveria acontecer?
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencias
+      description: Prints, videos ou logs relevantes
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Ambiente
+      options:
+        - Producao
+        - Homologacao
+        - Desenvolvimento
+    validations:
+      required: true

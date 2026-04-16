@@ -1,0 +1,43 @@
+- name: "type: bug"
+  color: "d73a4a"
+  description: "Erro de funcionalidade"
+
+- name: "type: feature"
+  color: "0e8a16"
+  description: "Nova funcionalidade"
+
+- name: "type: chore"
+  color: "1d76db"
+  description: "Tarefa de manutencao"
+
+- name: "type: docs"
+  color: "5319e7"
+  description: "Documentacao"
+
+- name: "type: ui"
+  color: "fbca04"
+  description: "Mudancas de interface"
+
+- name: "status: triage"
+  color: "ededed"
+  description: "Aguardando triagem"
+
+- name: "status: ready"
+  color: "0052cc"
+  description: "Pronto para desenvolvimento"
+
+- name: "status: blocked"
+  color: "b60205"
+  description: "Bloqueado por dependencia externa"
+
+- name: "priority: high"
+  color: "b60205"
+  description: "Alta prioridade"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "Media prioridade"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "Baixa prioridade"
