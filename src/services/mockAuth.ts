@@ -12,7 +12,7 @@ function mapProfessionalToUser(professional: Professional): AuthenticatedUser {
     nome: professional.nome,
     email: professional.email,
     cargo: professional.cargo,
-    avatarUrl: DEFAULT_AVATAR
+    avatarUrl: professional.fotoBase64 || DEFAULT_AVATAR
   };
 }
 
@@ -47,6 +47,10 @@ export const mockAuth = {
       throw new Error('Senha inválida');
     }
 
+    if (professional.status !== 'Ativo') {
+      throw new Error('Seu acesso está inativo. Procure o administrador.');
+    }
+
     const session = buildSession(professional);
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     return session;
@@ -58,5 +62,13 @@ export const mockAuth = {
 
   getDemoPassword() {
     return DEMO_PASSWORD;
+  },
+
+  getDemoAccounts() {
+    return db.getProfessionals().map(professional => ({
+      email: professional.email,
+      cargo: professional.cargo,
+      status: professional.status
+    }));
   }
 };

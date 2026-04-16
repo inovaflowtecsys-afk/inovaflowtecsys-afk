@@ -6,10 +6,11 @@ import { Input } from '@/components/ui/input';
 interface LoginPageProps {
   onLogin: (credentials: { email: string; password: string }) => Promise<void> | void;
   demoPassword: string;
+  demoAccounts: Array<{ email: string; cargo: string; status: 'Ativo' | 'Inativo' }>;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, demoPassword }) => {
-  const [email, setEmail] = React.useState('juliana@clinica.com');
+export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, demoPassword, demoAccounts }) => {
+  const [email, setEmail] = React.useState('admin@clinica.com');
   const [password, setPassword] = React.useState(demoPassword);
   const [error, setError] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -29,7 +30,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, demoPassword }) =
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.18),_transparent_24%),radial-gradient(circle_at_bottom_right,_rgba(15,118,110,0.14),_transparent_28%),linear-gradient(135deg,_#f5fbff_0%,_#f2fcfb_46%,_#f8fafc_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(244,232,207,0.42),_transparent_24%),radial-gradient(circle_at_bottom_right,_rgba(216,186,137,0.20),_transparent_28%),linear-gradient(135deg,_#fcfaf5_0%,_#f8f2e7_46%,_#fcfaf5_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto grid min-h-[calc(100vh-3rem)] w-full max-w-6xl overflow-hidden rounded-[32px] border border-white/80 bg-white/82 shadow-[0_32px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:grid-cols-[1.08fr_0.92fr]">
         <section className="relative hidden min-h-[640px] overflow-hidden lg:block">
           <img
@@ -37,7 +38,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, demoPassword }) =
             alt="Ambiente de clínica de estética"
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(8,47,73,0.18)_0%,_rgba(15,118,110,0.38)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(15,23,42,0.14)_0%,_rgba(71,85,105,0.30)_100%)]" />
         </section>
 
         <section className="flex items-center bg-white/68 p-6 sm:p-10 lg:p-12">
@@ -102,8 +103,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, demoPassword }) =
               </button>
             </form>
 
-            <div className="text-center text-xs text-slate-400 lg:text-left">
-              Demo atual: juliana@clinica.com | senha {demoPassword}
+            <div className="space-y-2 text-xs text-slate-500 lg:text-left">
+              <p className="font-medium text-slate-600">Contas demo (senha: {demoPassword})</p>
+              {demoAccounts.map(account => (
+                <p key={account.email}>
+                  {account.email} • {account.cargo} • {account.status}
+                </p>
+              ))}
             </div>
           </div>
         </section>

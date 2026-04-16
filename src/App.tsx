@@ -55,7 +55,11 @@ export default function App() {
           {renderContent()}
         </Layout>
       ) : (
-        <LoginPage onLogin={handleLogin} demoPassword={mockAuth.getDemoPassword()} />
+        <LoginPage
+          onLogin={handleLogin}
+          demoPassword={mockAuth.getDemoPassword()}
+          demoAccounts={mockAuth.getDemoAccounts()}
+        />
       )}
       <Toaster position="top-right" />
     </>

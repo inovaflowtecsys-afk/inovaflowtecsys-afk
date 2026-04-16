@@ -240,7 +240,7 @@ export const ClientsPage: React.FC = () => {
         </>
       ) : (
         <div className="rounded-xl border border-[#dcc8a1] bg-[#fffdfa] p-6 shadow-[0_18px_40px_rgba(223,198,150,0.10)]">
-          <h2 className="mb-6 text-xl font-bold text-[#214a43]">{editingClient.id ? 'Editar Cliente' : 'Novo Cliente'}</h2>
+          <h2 className="mb-6 text-xl font-bold text-slate-700">{editingClient.id ? 'Editar Cliente' : 'Novo Cliente'}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-4">
             <FormSectionHeader title="DADOS CADASTRAIS" className="col-span-1 md:col-span-12" />

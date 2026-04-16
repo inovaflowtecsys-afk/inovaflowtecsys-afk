@@ -41,17 +41,39 @@ const INITIAL_PROFESSIONALS: Professional[] = [
   {
     id: '1',
     authUid: 'auth-1',
-    nome: 'Dra. Juliana Nardaci',
-    cpf: '987.654.321-11',
+    nome: 'Administrador do Sistema',
+    cpf: '111.222.333-44',
     dataNascimento: '1985-10-20',
-    email: 'juliana@clinica.com',
+    email: 'admin@clinica.com',
     celular: '(11) 99999-9999',
     setor: 'Estética Facial',
-    cargo: 'Dermatologista',
+    cargo: 'Administrador',
+    status: 'Ativo',
     endereco: {
       cep: '01001-000',
       logradouro: 'Praça da Sé',
       numero: '200',
+      bairro: 'Sé',
+      cidade: 'São Paulo',
+      uf: 'SP'
+    },
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: '2',
+    authUid: 'auth-2',
+    nome: 'Usuário Padrão',
+    cpf: '555.666.777-88',
+    dataNascimento: '1992-04-10',
+    email: 'usuario@clinica.com',
+    celular: '(11) 98888-7777',
+    setor: 'Estética Corporal',
+    cargo: 'Esteticista',
+    status: 'Ativo',
+    endereco: {
+      cep: '01001-000',
+      logradouro: 'Praça da Sé',
+      numero: '250',
       bairro: 'Sé',
       cidade: 'São Paulo',
       uf: 'SP'
@@ -87,7 +109,10 @@ class MockDb {
     if (saved) {
       const data = JSON.parse(saved);
       this.clients = data.clients || INITIAL_CLIENTS;
-      this.professionals = data.professionals || INITIAL_PROFESSIONALS;
+      this.professionals = (data.professionals || INITIAL_PROFESSIONALS).map((professional: Professional) => ({
+        ...professional,
+        status: professional.status || 'Ativo'
+      }));
       this.suppliers = data.suppliers || [];
       this.treatments = data.treatments || INITIAL_TREATMENTS;
       this.attendances = data.attendances || [];
@@ -112,11 +137,12 @@ class MockDb {
   // Professionals
   getProfessionals() { return this.professionals; }
   saveProfessional(prof: Professional) {
+    const normalizedProf = { ...prof, status: prof.status || 'Ativo' as const };
     const index = this.professionals.findIndex(p => p.id === prof.id);
-    if (index >= 0) this.professionals[index] = prof;
+    if (index >= 0) this.professionals[index] = normalizedProf;
     else {
       const generatedId = Math.random().toString(36).substr(2, 9);
-      this.professionals.push({ ...prof, id: generatedId, authUid: prof.authUid ?? `auth-${generatedId}` });
+      this.professionals.push({ ...normalizedProf, id: generatedId, authUid: prof.authUid ?? `auth-${generatedId}` });
     }
     this.persist();
   }

@@ -13,6 +13,16 @@ import { FormSectionHeader } from '@/components/FormSectionHeader';
 import { toast } from 'sonner';
 import { isValidCpf, onlyDigits } from '@/lib/utils';
 
+const MAX_PHOTO_SIZE_BYTES = 2 * 1024 * 1024;
+
+const fileToBase64 = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ''));
+    reader.onerror = () => reject(new Error('Falha ao ler arquivo de imagem'));
+    reader.readAsDataURL(file);
+  });
+
 const emptyAddress: Address = {
   cep: '',
   logradouro: '',
@@ -25,6 +35,8 @@ const emptyAddress: Address = {
 
 const emptyProfessional: Professional = {
   id: '',
+  fotoBase64: '',
+  status: 'Ativo',
   nome: '',
   cpf: '',
   dataNascimento: '',
@@ -52,6 +64,7 @@ export const ProfessionalsPage: React.FC = () => {
   const requiredMessages: Record<string, string> = {
     nome: 'Nome é obrigatório',
     cpf: 'CPF é obrigatório',
+    status: 'Status é obrigatório',
     celular: 'Celular é obrigatório',
     cep: 'CEP é obrigatório',
     logradouro: 'Logradouro é obrigatório',
@@ -103,6 +116,7 @@ export const ProfessionalsPage: React.FC = () => {
     if (!editingProfessional.nome) newErrors.nome = 'Nome é obrigatório';
     const cpfError = validateCpfField(editingProfessional.cpf);
     if (cpfError) newErrors.cpf = cpfError;
+    if (!editingProfessional.status) newErrors.status = 'Status é obrigatório';
     if (!editingProfessional.celular) newErrors.celular = 'Celular é obrigatório';
     if (!editingProfessional.endereco.cep) newErrors.cep = 'CEP é obrigatório';
     if (!editingProfessional.endereco.logradouro) newErrors.logradouro = 'Logradouro é obrigatório';
@@ -175,6 +189,33 @@ export const ProfessionalsPage: React.FC = () => {
     }
   };
 
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Selecione um arquivo de imagem válido');
+      event.target.value = '';
+      return;
+    }
+
+    if (file.size > MAX_PHOTO_SIZE_BYTES) {
+      toast.error('A imagem deve ter no máximo 2MB');
+      event.target.value = '';
+      return;
+    }
+
+    try {
+      const encoded = await fileToBase64(file);
+      setEditingProfessional(prev => ({ ...prev, fotoBase64: encoded }));
+      toast.success('Foto carregada com sucesso');
+    } catch {
+      toast.error('Não foi possível converter a imagem para Base64');
+    } finally {
+      event.target.value = '';
+    }
+  };
+
   return (
     <div className="space-y-6">
       {viewMode === 'table' ? (
@@ -200,6 +241,7 @@ export const ProfessionalsPage: React.FC = () => {
                 <TableRow>
                   <TableHead>Nome</TableHead>
                   <TableHead>Cargo</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Contato</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
@@ -210,13 +252,32 @@ export const ProfessionalsPage: React.FC = () => {
                     <TableRow key={prof.id}>
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f4e8cf] text-[#7e6746]">
-                            <User size={16} />
-                          </div>
+                          {prof.fotoBase64 ? (
+                            <img
+                              src={prof.fotoBase64}
+                              alt={prof.nome}
+                              className="h-8 w-8 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f4e8cf] text-[#7e6746]">
+                              <User size={16} />
+                            </div>
+                          )}
                           {prof.nome}
                         </div>
                       </TableCell>
                       <TableCell>{prof.cargo}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                            prof.status === 'Ativo'
+                              ? 'bg-[#ece6d8] text-slate-700'
+                              : 'bg-[#f6d4d4] text-[#8a1f1f]'
+                          }`}
+                        >
+                          {prof.status}
+                        </span>
+                      </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
                           <span className="text-sm">{prof.celular}</span>
@@ -237,7 +298,7 @@ export const ProfessionalsPage: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center text-[#8a7452]">
+                    <TableCell colSpan={5} className="h-24 text-center text-[#8a7452]">
                       Nenhum profissional encontrado.
                     </TableCell>
                   </TableRow>
@@ -248,10 +309,51 @@ export const ProfessionalsPage: React.FC = () => {
         </>
       ) : (
         <div className="rounded-xl border border-[#dcc8a1] bg-[#fffdfa] p-6 shadow-[0_18px_40px_rgba(223,198,150,0.10)]">
-          <h2 className="mb-6 text-xl font-bold text-[#214a43]">{editingProfessional.id ? 'Editar Profissional' : 'Novo Profissional'}</h2>
+          <h2 className="mb-4 text-xl font-bold text-slate-700">{editingProfessional.id ? 'Editar Profissional' : 'Novo Profissional'}</h2>
+          <div className="mb-6 rounded-lg border border-[#dcc8a1] bg-[#f8f1e4] px-4 py-3 text-sm text-slate-600">
+            O cadastro e a manutenção de profissionais devem ser feitos pelo administrador do sistema.
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-4">
             <FormSectionHeader title="DADOS CADASTRAIS" className="col-span-1 md:col-span-12" />
+
+            <div className="col-span-1 md:col-span-12 space-y-2">
+              <Label className="text-sm font-medium text-slate-700">Foto do profissional (Base64)</Label>
+              <div className="flex flex-col gap-3 md:flex-row md:items-center">
+                {editingProfessional.fotoBase64 ? (
+                  <img
+                    src={editingProfessional.fotoBase64}
+                    alt={editingProfessional.nome || 'Foto do profissional'}
+                    className="h-20 w-20 rounded-xl border border-[#dcc8a1] object-cover"
+                  />
+                ) : (
+                  <div className="flex h-20 w-20 items-center justify-center rounded-xl border border-dashed border-[#dcc8a1] bg-[#fff8eb] text-[#8a7452]">
+                    <User size={24} />
+                  </div>
+                )}
+
+                <div className="flex-1 space-y-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoChange}
+                    className="h-10"
+                  />
+                  <div className="flex items-center gap-3">
+                    {editingProfessional.fotoBase64 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setEditingProfessional(prev => ({ ...prev, fotoBase64: '' }))}
+                      >
+                        Remover foto
+                      </Button>
+                    )}
+                    <span className="text-xs text-[#8a7452]">Limite de 2MB. A imagem será armazenada em Base64.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div className="col-span-1 md:col-span-6 space-y-1.5">
               <Label className="text-sm font-medium text-slate-700">Nome completo <span className="text-destructive">*</span></Label>
@@ -305,7 +407,7 @@ export const ProfessionalsPage: React.FC = () => {
                 placeholder="(11) 98765-4321"
               />
             </div>
-            <div className="col-span-1 md:col-span-4 space-y-1.5">
+            <div className="col-span-1 md:col-span-3 space-y-1.5">
               <Label className="text-sm font-medium text-slate-700">E-mail</Label>
               <Input 
                 type="email"
@@ -315,7 +417,7 @@ export const ProfessionalsPage: React.FC = () => {
                 placeholder="email@exemplo.com"
               />
             </div>
-            <div className="col-span-1 md:col-span-4 space-y-1.5">
+            <div className="col-span-1 md:col-span-3 space-y-1.5">
               <Label className="text-sm font-medium text-slate-700">Setor</Label>
               <Select 
                 value={editingProfessional.setor} 
@@ -336,7 +438,7 @@ export const ProfessionalsPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-1 md:col-span-4 space-y-1.5">
+            <div className="col-span-1 md:col-span-3 space-y-1.5">
               <Label className="text-sm font-medium text-slate-700">Cargo</Label>
               <Select 
                 value={editingProfessional.cargo} 
@@ -356,6 +458,25 @@ export const ProfessionalsPage: React.FC = () => {
                   <SelectItem value="new" className="font-bold text-primary">+ Novo Cargo</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="col-span-1 md:col-span-3 space-y-1.5">
+              <Label className="text-sm font-medium text-slate-700">Status de acesso <span className="text-destructive">*</span></Label>
+              <Select
+                value={editingProfessional.status}
+                onValueChange={(val) => {
+                  setEditingProfessional({ ...editingProfessional, status: val as 'Ativo' | 'Inativo' });
+                  clearFieldErrorIfValid('status', val);
+                }}
+              >
+                <SelectTrigger className="h-10 w-full px-3 py-2 text-sm border border-input rounded-md bg-transparent">
+                  <SelectValue placeholder="Selecione o status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Ativo">Ativo</SelectItem>
+                  <SelectItem value="Inativo">Inativo</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.status && <p className="text-xs text-destructive">{errors.status}</p>}
             </div>
             
             <Dialog open={isAddingSector} onOpenChange={setIsAddingSector}>

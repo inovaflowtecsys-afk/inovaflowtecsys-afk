@@ -7,10 +7,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[linear-gradient(135deg,_#13b7a6_0%,_#0ea5e9_100%)] text-white shadow-[0_14px_34px_rgba(19,183,166,0.26)] hover:brightness-[1.03]',
-        secondary: 'bg-[linear-gradient(135deg,_rgba(19,183,166,0.14)_0%,_rgba(14,165,233,0.12)_100%)] text-teal-900 hover:bg-[linear-gradient(135deg,_rgba(19,183,166,0.20)_0%,_rgba(14,165,233,0.18)_100%)]',
-        outline: 'border border-cyan-200 bg-white text-teal-800 hover:bg-cyan-50 hover:border-cyan-300',
-        ghost: 'text-teal-800 hover:bg-cyan-50/80 hover:text-sky-700',
+        default: 'bg-[linear-gradient(135deg,_#f4e8cf_0%,_#d8ba89_100%)] text-slate-700 shadow-[0_14px_34px_rgba(216,186,137,0.34)] hover:brightness-[1.03]',
+        secondary: 'bg-[linear-gradient(135deg,_rgba(244,232,207,0.62)_0%,_rgba(216,186,137,0.42)_100%)] text-slate-700 hover:bg-[linear-gradient(135deg,_rgba(244,232,207,0.82)_0%,_rgba(216,186,137,0.58)_100%)]',
+        outline: 'border border-[#dcc8a1] bg-white text-slate-700 hover:bg-[#faf4ea] hover:border-[#d4be95]',
+        ghost: 'text-slate-700 hover:bg-[#faf4ea] hover:text-slate-800',
         destructive: 'bg-red-600 text-white hover:bg-red-700'
       },
       size: {

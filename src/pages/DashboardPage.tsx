@@ -32,12 +32,12 @@ export const DashboardPage: React.FC = () => {
   }, []);
 
   const cards = [
-    { title: 'Total de Clientes', value: stats.clients, icon: Users, color: 'text-[#1d6f68]', bg: 'bg-[#f4e8cf]' },
-    { title: 'Profissionais', value: stats.professionals, icon: UserRound, color: 'text-[#0ea5e9]', bg: 'bg-[#f3ead8]' },
+    { title: 'Total de Clientes', value: stats.clients, icon: Users, color: 'text-slate-700', bg: 'bg-[#f4e8cf]' },
+    { title: 'Profissionais', value: stats.professionals, icon: UserRound, color: 'text-slate-600', bg: 'bg-[#f3ead8]' },
     { title: 'Fornecedores', value: stats.suppliers, icon: Truck, color: 'text-[#846b45]', bg: 'bg-[#faefdc]' },
-    { title: 'Tratamentos', value: stats.treatments, icon: Syringe, color: 'text-[#115e59]', bg: 'bg-[#edf7f3]' },
-    { title: 'Atendimentos', value: stats.attendances, icon: ClipboardList, color: 'text-[#2f6d62]', bg: 'bg-[#f1e7d4]' },
-    { title: 'Faturamento Total', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.revenue), icon: TrendingUp, color: 'text-[#214a43]', bg: 'bg-[#f8f1e4]' },
+    { title: 'Tratamentos', value: stats.treatments, icon: Syringe, color: 'text-slate-600', bg: 'bg-[#f3ede2]' },
+    { title: 'Atendimentos', value: stats.attendances, icon: ClipboardList, color: 'text-slate-700', bg: 'bg-[#f1e7d4]' },
+    { title: 'Faturamento Total', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.revenue), icon: TrendingUp, color: 'text-slate-700', bg: 'bg-[#f8f1e4]' },
   ];
 
   return (
@@ -52,7 +52,7 @@ export const DashboardPage: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#214a43]">{card.value}</div>
+              <div className="text-2xl font-bold text-slate-700">{card.value}</div>
             </CardContent>
           </Card>
         ))}

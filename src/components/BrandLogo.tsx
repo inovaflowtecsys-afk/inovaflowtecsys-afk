@@ -18,7 +18,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ className, compact = false
       </div>
       {!compact && (
         <div className="min-w-0">
-          <div className="text-lg font-semibold tracking-tight text-[#214a43]">Juna Darci</div>
+          <div className="text-lg font-semibold tracking-tight text-slate-700">Juna Darci</div>
           <div className="text-sm text-[#8a7452]">Gestão clínica com fluxo inteligente</div>
         </div>
       )}

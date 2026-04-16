@@ -19,9 +19,13 @@ export interface Client {
   createdAt: string;
 }
 
+export type ProfessionalStatus = 'Ativo' | 'Inativo';
+
 export interface Professional {
   id: string;
   authUid?: string;
+  fotoBase64?: string;
+  status: ProfessionalStatus;
   nome: string;
   cpf: string;
   dataNascimento: string;
